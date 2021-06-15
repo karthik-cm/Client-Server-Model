@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class Client {
-
+	
 	private static Socket socket = null;
 	private static DataInputStream input = null;
 	private static DataOutputStream output = null;
@@ -21,14 +21,18 @@ public class Client {
 			socket = new Socket(ip, port);
 			System.out.println("Connection established successfully !");
 			
-			// Send text / msg : Client ---> Server
+			// Send message : Client -> Server
 			sendMessage(socket);
 		}
 		catch(IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Client :::: Client() "+e);
+		}
+		catch(Exception e) {
+			System.out.println("Exception occurred inside Client :::: Client() "+e);
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static void sendMessage(Socket socket) {
 		try {
 			// Initialize input stream
@@ -39,14 +43,14 @@ public class Client {
 			
 			String msg = "";
 			while(!msg.equalsIgnoreCase("exit")) {
-				msg = input.readUTF(); // Read console input
-				output.writeUTF(msg); // Write to socket output stream
+				msg = input.readLine(); // Read from console
+				output.writeUTF(msg); // Write to socket stream
 			}
 			
 			closeSocketConnection();
 		}
 		catch(IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Client :::: sendMessage() "+e);
 		}
 	}
 	
@@ -63,7 +67,7 @@ public class Client {
 			}
 		}
 		catch(IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Client :::: closeSocketConnection() "+e);
 		}
 	}
 
@@ -72,3 +76,4 @@ public class Client {
 	}
 
 }
+

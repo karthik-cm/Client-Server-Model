@@ -1,5 +1,6 @@
 package com.java.client.server.model;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,34 +17,38 @@ public class Server {
 	public Server(int port) {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Server started... Waiting for a Client...");
+			System.out.println("Server started, Waiting for a Client...");
 			
+			// Receive message : Server <- Client
 			receiveMessage(serverSocket);
 		}
 		catch (IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Server :::: Server() "+e);
+		}
+		catch (Exception e) {
+			System.out.println("Exception occurred inside Server :::: Server() "+e);
 		}
 	}
 	
 	private void receiveMessage(ServerSocket serverSocket) {
 		try{
 			socket = serverSocket.accept();
-			System.out.println("Client accepted !");
+			System.out.println("Client connection accepted !");
 			
 			// Initialize input stream
-			input = new DataInputStream(socket.getInputStream());
+			input = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 			
 			
 			String msg = "";
 			while(!msg.equalsIgnoreCase("exit")) {
-				msg = input.readUTF();
-				System.out.println(msg);
+				msg = input.readUTF(); // Read the message from Client
+				System.out.println(msg); // Print the message to Console
 			}
 			
 			closeSocketConnection();
 		}
 		catch (IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Server :::: receiveMessage() "+e);
 		}
 	}
 
@@ -60,7 +65,7 @@ public class Server {
 			}
 		}
 		catch(IOException e) {
-			System.out.println(e);
+			System.out.println("IOException occurred inside Server :::: closeSocketConnection() "+e);
 		}
 	}
 
@@ -69,3 +74,4 @@ public class Server {
 	}
 
 }
+
